@@ -1,0 +1,46 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v1
+
+    - name: Prepare Yarn
+      run: |
+        npm -g install yarn
+        yarn
+
+    - name: Build production
+      run: yarn build:prod
+
+    - name: Checkout gh-pages branch
+      uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+        clean: false
+
+    - name: Remove all but build from filesystem
+      run: |
+        find . -mindepth 1 ! -regex '^./build\(/.*\)?' ! -regex '^./.git\(/.*\)?' -delete
+        mv ./build/* .
+
+    - name: Add files to staging and commit
+      run: |
+        git add .
+        git config --global user.name 'Github Action'
+        git config --global user.email 'action@github.com'
+        git commit -m "Automated deploy by github actions" --allow-empty
+        git push
