@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ develop ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v1
+
+    - name: Prepare Yarn
+      run: |
+        npm -g install yarn
+        yarn
+
+    - name: Build production
+      run: yarn build:prod
