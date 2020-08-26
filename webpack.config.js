@@ -21,7 +21,6 @@ module.exports = {
 	output: {
 		filename: `js/[${IS_DEV ? 'name' : 'hash'}].js`,
 		chunkFilename: `js/[${IS_DEV ? 'name' : 'contenthash'}].js`,
-		publicPath: '/',
 		path: path.resolve(__dirname, './build')
 
 	},
